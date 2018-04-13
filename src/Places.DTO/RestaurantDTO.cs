@@ -15,7 +15,7 @@ namespace Places.DTO
         public int IdAddress { get; set; }
         public string Images { get; set; }
 
-        public List<MenuDTO> Menus { get; set; }
+        public MenuDTO IDMenu { get; set; }
         public List<ReviewDTO> Reviews { get; set; } = new List<ReviewDTO>();
         public List<FacilitieDTO> Facilities { get; set; } = new List<FacilitieDTO>();
 
