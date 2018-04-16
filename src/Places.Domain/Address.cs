@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Places.DTO
+namespace Places.Domain
 {
     public class Address :Entity<int>
     {

@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Places.Web.Models;
+using Places.Domain;
+
 using Places.Web.Models.ManageViewModels;
 using Places.Web.Services;
 

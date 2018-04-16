@@ -1,12 +1,13 @@
-﻿using Places.DTO;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿//using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Places.Domain;
 
 namespace Places.DAL.EF
 
 {
-    public class PlacesContext : IdentityDbContext
+    public class PlacesContext : Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext<ApplicationUser>
     {
 
         public PlacesContext(DbContextOptions<PlacesContext> options) : base(options)
@@ -43,15 +44,42 @@ namespace Places.DAL.EF
             modelBuilder.Entity<Pub>().HasBaseType<Place>();
             modelBuilder.Entity<FastFood>().HasBaseType<Place>();
 
+            modelBuilder.Entity<ApplicationUser>(entity =>
+            {
+                entity.ToTable(name: "Users");             
+            });
+            modelBuilder.Entity<IdentityRole>(entity =>
+            {
+                entity.ToTable(name: "Role");
+            });
+            modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+            {
+                entity.ToTable("UserRoles");
+
+            });
+
+            modelBuilder.Entity<IdentityUserClaim<string>>(entity =>
+            {
+                entity.ToTable("UserClaims");
+            });
+            modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
+            {
+                entity.ToTable("UserLogins");
+     
+            });
+
+            modelBuilder.Entity<IdentityRoleClaim<string>>(entity =>
+            {
+                entity.ToTable("RoleClaims");
+
+            });
+
+            modelBuilder.Entity<IdentityUserToken<string>>(entity =>
+            {
+                entity.ToTable("UserTokens");
 
 
-            //modelBuilder.Entity<ApplicationUser>().ToTable("User", "dbo");
-            //modelBuilder.Entity<IdentityRole>().ToTable("Role", "dbo");
-            //modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRole");
-            //modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaim");
-            //modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogin");
-
-
+            });
 
         }
     }

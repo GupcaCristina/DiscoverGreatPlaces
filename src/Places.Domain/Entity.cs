@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Places.DTO
+namespace Places.Domain
 {
     public abstract class Entity<TId>
     {

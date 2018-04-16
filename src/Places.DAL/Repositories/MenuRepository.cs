@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Places.DTO;
+using Places.Domain;
 
 namespace Places.DAL.Repositories
 {

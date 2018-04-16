@@ -12,8 +12,8 @@ using System;
 namespace Places.DAL.Migrations
 {
     [DbContext(typeof(PlacesContext))]
-    [Migration("20180413131420_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20180416092314_ItitialCreate")]
+    partial class ItitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,7 +43,7 @@ namespace Places.DAL.Migrations
                         .HasName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -62,10 +62,95 @@ namespace Places.DAL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("RoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("ProviderKey");
+
+                    b.Property<string>("ProviderDisplayName");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLogins");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("RoleId");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("UserTokens");
+                });
+
+            modelBuilder.Entity("Places.Domain.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AdditionalInfo");
+
+                    b.Property<string>("PostalCode");
+
+                    b.Property<int>("StreetID");
+
+                    b.Property<string>("StreetNumber");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StreetID");
+
+                    b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("Places.Domain.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -113,95 +198,10 @@ namespace Places.DAL.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ClaimType");
-
-                    b.Property<string>("ClaimValue");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider");
-
-                    b.Property<string>("ProviderKey");
-
-                    b.Property<string>("ProviderDisplayName");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserLogins");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("LoginProvider");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("Places.DTO.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AdditionalInfo");
-
-                    b.Property<string>("PostalCode");
-
-                    b.Property<int>("StreetID");
-
-                    b.Property<string>("StreetNumber");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StreetID");
-
-                    b.ToTable("Addresses");
-                });
-
-            modelBuilder.Entity("Places.DTO.City", b =>
+            modelBuilder.Entity("Places.Domain.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -217,7 +217,7 @@ namespace Places.DAL.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("Places.DTO.Country", b =>
+            modelBuilder.Entity("Places.Domain.Country", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -229,7 +229,7 @@ namespace Places.DAL.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("Places.DTO.Facilitie", b =>
+            modelBuilder.Entity("Places.Domain.Facilitie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -245,7 +245,7 @@ namespace Places.DAL.Migrations
                     b.ToTable("Facilities");
                 });
 
-            modelBuilder.Entity("Places.DTO.Menu", b =>
+            modelBuilder.Entity("Places.Domain.Menu", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -257,7 +257,7 @@ namespace Places.DAL.Migrations
                     b.ToTable("Menus");
                 });
 
-            modelBuilder.Entity("Places.DTO.MenuItem", b =>
+            modelBuilder.Entity("Places.Domain.MenuItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -277,7 +277,7 @@ namespace Places.DAL.Migrations
                     b.ToTable("MenuItems");
                 });
 
-            modelBuilder.Entity("Places.DTO.Place", b =>
+            modelBuilder.Entity("Places.Domain.Place", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -314,7 +314,7 @@ namespace Places.DAL.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Place");
                 });
 
-            modelBuilder.Entity("Places.DTO.Post", b =>
+            modelBuilder.Entity("Places.Domain.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -338,7 +338,7 @@ namespace Places.DAL.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Places.DTO.Review", b =>
+            modelBuilder.Entity("Places.Domain.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -366,7 +366,7 @@ namespace Places.DAL.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("Places.DTO.Street", b =>
+            modelBuilder.Entity("Places.Domain.Street", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -382,7 +382,7 @@ namespace Places.DAL.Migrations
                     b.ToTable("Streets");
                 });
 
-            modelBuilder.Entity("Places.DTO.WorkSchedule", b =>
+            modelBuilder.Entity("Places.Domain.WorkSchedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -404,9 +404,9 @@ namespace Places.DAL.Migrations
                     b.ToTable("WorkSchedules");
                 });
 
-            modelBuilder.Entity("Places.DTO.FastFood", b =>
+            modelBuilder.Entity("Places.Domain.FastFood", b =>
                 {
-                    b.HasBaseType("Places.DTO.Place");
+                    b.HasBaseType("Places.Domain.Place");
 
 
                     b.ToTable("FastFood");
@@ -414,9 +414,9 @@ namespace Places.DAL.Migrations
                     b.HasDiscriminator().HasValue("FastFood");
                 });
 
-            modelBuilder.Entity("Places.DTO.Pizzeria", b =>
+            modelBuilder.Entity("Places.Domain.Pizzeria", b =>
                 {
-                    b.HasBaseType("Places.DTO.Place");
+                    b.HasBaseType("Places.Domain.Place");
 
 
                     b.ToTable("Pizzeria");
@@ -424,9 +424,9 @@ namespace Places.DAL.Migrations
                     b.HasDiscriminator().HasValue("Pizzeria");
                 });
 
-            modelBuilder.Entity("Places.DTO.Pub", b =>
+            modelBuilder.Entity("Places.Domain.Pub", b =>
                 {
-                    b.HasBaseType("Places.DTO.Place");
+                    b.HasBaseType("Places.Domain.Place");
 
 
                     b.ToTable("Pub");
@@ -434,9 +434,9 @@ namespace Places.DAL.Migrations
                     b.HasDiscriminator().HasValue("Pub");
                 });
 
-            modelBuilder.Entity("Places.DTO.Restaurant", b =>
+            modelBuilder.Entity("Places.Domain.Restaurant", b =>
                 {
-                    b.HasBaseType("Places.DTO.Place");
+                    b.HasBaseType("Places.Domain.Place");
 
 
                     b.ToTable("Restaurant");
@@ -454,7 +454,7 @@ namespace Places.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("Places.Domain.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -462,7 +462,7 @@ namespace Places.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("Places.Domain.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -475,7 +475,7 @@ namespace Places.DAL.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("Places.Domain.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -483,78 +483,78 @@ namespace Places.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("Places.Domain.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Places.DTO.Address", b =>
+            modelBuilder.Entity("Places.Domain.Address", b =>
                 {
-                    b.HasOne("Places.DTO.Street", "Street")
+                    b.HasOne("Places.Domain.Street", "Street")
                         .WithMany()
                         .HasForeignKey("StreetID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Places.DTO.City", b =>
+            modelBuilder.Entity("Places.Domain.City", b =>
                 {
-                    b.HasOne("Places.DTO.Country", "Country")
+                    b.HasOne("Places.Domain.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Places.DTO.Facilitie", b =>
+            modelBuilder.Entity("Places.Domain.Facilitie", b =>
                 {
-                    b.HasOne("Places.DTO.Place")
+                    b.HasOne("Places.Domain.Place")
                         .WithMany("Facilities")
                         .HasForeignKey("PlaceId");
                 });
 
-            modelBuilder.Entity("Places.DTO.MenuItem", b =>
+            modelBuilder.Entity("Places.Domain.MenuItem", b =>
                 {
-                    b.HasOne("Places.DTO.Menu")
+                    b.HasOne("Places.Domain.Menu")
                         .WithMany("MenuItems")
                         .HasForeignKey("MenuId");
                 });
 
-            modelBuilder.Entity("Places.DTO.Place", b =>
+            modelBuilder.Entity("Places.Domain.Place", b =>
                 {
-                    b.HasOne("Places.DTO.Address", "Address")
+                    b.HasOne("Places.Domain.Address", "Address")
                         .WithMany()
                         .HasForeignKey("IdAddress")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Places.DTO.Menu", "Menu")
+                    b.HasOne("Places.Domain.Menu", "Menu")
                         .WithMany()
                         .HasForeignKey("IdMenu")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Places.DTO.WorkSchedule", "WorkSchedule")
+                    b.HasOne("Places.Domain.WorkSchedule", "WorkSchedule")
                         .WithMany()
                         .HasForeignKey("IdWorkSchedule")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Places.DTO.Post", b =>
+            modelBuilder.Entity("Places.Domain.Post", b =>
                 {
-                    b.HasOne("Places.DTO.Place", "Place")
+                    b.HasOne("Places.Domain.Place", "Place")
                         .WithMany()
                         .HasForeignKey("PlaceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Places.DTO.Review", b =>
+            modelBuilder.Entity("Places.Domain.Review", b =>
                 {
-                    b.HasOne("Places.DTO.Place")
+                    b.HasOne("Places.Domain.Place")
                         .WithMany("Reviews")
                         .HasForeignKey("PlaceId");
                 });
 
-            modelBuilder.Entity("Places.DTO.Street", b =>
+            modelBuilder.Entity("Places.Domain.Street", b =>
                 {
-                    b.HasOne("Places.DTO.City", "City")
+                    b.HasOne("Places.Domain.City", "City")
                         .WithMany()
                         .HasForeignKey("CityID")
                         .OnDelete(DeleteBehavior.Cascade);

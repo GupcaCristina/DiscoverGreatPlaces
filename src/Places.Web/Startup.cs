@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Places.Web.Models;
 using Places.Web.Services;
 using Places.DAL.EF;
+using Places.Domain;
 
 namespace Places.Web
 {

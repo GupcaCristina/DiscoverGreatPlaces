@@ -20,7 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Places.DAL\Places.DAL.csproj" />
+    <ProjectReference Include="..\Places.DAL\Places.DAL.csproj" />
+    <ProjectReference Include="..\Places.Domain\Places.Domain.csproj" />
   </ItemGroup>
 
 </Project>

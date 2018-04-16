@@ -1,4 +1,4 @@
-﻿using Places.DTO;
+﻿using Places.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

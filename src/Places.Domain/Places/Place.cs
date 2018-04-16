@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Places.DTO
+namespace Places.Domain
 {
     public abstract class Place :Entity<int>
     {
@@ -25,6 +25,7 @@ namespace Places.DTO
         [ForeignKey("Menu")]
         public int IdMenu { get; set; }
         public Menu Menu { get; set; }
+
 
         public List<Review> Reviews { get; set; }= new List<Review>();
         public  List<Facilitie> Facilities { get; set; } = new List<Facilitie>();
