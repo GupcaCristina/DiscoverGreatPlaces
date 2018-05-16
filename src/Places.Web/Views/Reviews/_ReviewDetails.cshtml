@@ -1,0 +1,27 @@
+﻿
+@model Places.Web.Models.ViewModels.ReviewViewModel
+@inject IViewLocalizer Localizer
+
+<div class="customer-review_wrap">
+    <div class="customer-img">
+    </div>
+    <div class="customer-content-wrap">
+        <div class="customer-rating">
+            @Localizer["Rating"] :
+            @for (int i = 0; i < @Model.Rating; i++)
+            {
+                <img src="~/images/incons/star.png" />
+            }
+            | @Model.Date.ToShortDateString()
+        </div>
+        <p class="customer-text">
+            @Model.Description
+        </p>
+        <hr />
+    </div>
+</div>
+
+
+
+
+

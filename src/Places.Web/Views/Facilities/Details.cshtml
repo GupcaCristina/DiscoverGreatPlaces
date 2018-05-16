@@ -1,0 +1,17 @@
+﻿@using Places.Web.Models.ViewModels
+@inject IViewLocalizer Localizer
+@model List<LookupViewModel>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4">
+            <label class="custom-checkbox">
+                <span class="ti-check-box"></span>
+                <span class="custom-control-description">  
+                    <span> • </span> 
+                    @Localizer[@item.Name]
+                </span>
+            </label>
+        </div>
+    }
+</div>

@@ -4,25 +4,61 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Places.BLL.Interfaces;
 using Places.Web.Models;
+using AutoMapper;
+using Places.Web.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Places.Domain;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Http;
 
 namespace Places.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private IPlaceServices _placesService;
+        private UserManager<ApplicationUser> _userManager;
+        private IImageServices _imageServices;
+
+        public HomeController(UserManager<ApplicationUser> userManager, IPlaceServices placeServices,
+            IImageServices imageServices 
+           )
+        {
+            _userManager = userManager;
+            _placesService = placeServices;
+            _imageServices = imageServices;
+        }
+
         public IActionResult Index()
         {
+            var topPlaces = _placesService.GetTopPlaces().ToList();
+            var placeTypes = _placesService.GetTypes();
+            var places= Mapper.Map<List<PlaceViewModel>>(topPlaces);
+            for (int i = 0; i < topPlaces.Count; i++)
+            {
+                places[i].Image =  _imageServices.ConvertImage(topPlaces[i].Images[0].PlaceImage);
+            }
+            ViewData["TopPlaces"] = places;
+            ViewData["PlaceTypes"] = Mapper.Map<List<LookupViewModel>>(placeTypes);
+            ViewData["CurrentCulture"] = System.Threading.Thread.CurrentThread.CurrentCulture;
+            ViewData["CurrentUICulture"] = System.Threading.Thread.CurrentThread.CurrentUICulture;
+
             return View();
         }
 
-        public IActionResult About()
+        [HttpPost]
+        public IActionResult SetLanguage(string culture, string returnUrl)
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+            return LocalRedirect(returnUrl);
         }
 
-        public IActionResult Contact()
+        public IActionResult ProfileInfo()
         {
             ViewData["Message"] = "Your contact page.";
 

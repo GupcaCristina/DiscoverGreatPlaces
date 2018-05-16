@@ -1,0 +1,15 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Places.Web.Models
+@using Places.Web.Models.ViewModels
+@model PlaceDetailsViewModel
+
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+|
+@if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result.Id.Equals(Model.UserId.ToString()))
+{
+    @Html.ActionLink("Edit Place", "Edit", "Places", new { id = Model.Id },
+        new { @class = "btn btn-danger" })
+}
+

@@ -1,0 +1,11 @@
+﻿@inject IViewLocalizer Localizer
+
+<div class="form-group col-md-12">
+    <form class="form-wrap mt-12" asp-controller="Places" asp-action="Index" asp-route-page="1">
+        <div class="btn-group all-width" role="group" aria-label="Basic example">
+            <input name="searchString" type="text" placeholder="@Localizer["Find a Place"]" class="form-control col-md-9">
+            <input type="submit" value="@Localizer["Search"]" class="btn-danger btn-lg col-md-3 marginstyle">
+        </div>
+    </form>
+</div>
+

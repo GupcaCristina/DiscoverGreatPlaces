@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Places.DAL.Repositories
 {
-    public class ReviewRepository:Repository<Review>
+    public class ReviewRepository:IRepository<Review>
     {
         public ReviewRepository(DbContext context) : base(context)
         {

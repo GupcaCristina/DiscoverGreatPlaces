@@ -1,0 +1,92 @@
+﻿@using Places.Web.Models.ViewModels
+@inject IViewLocalizer Localizer
+
+@model List<LookupViewModel>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="find-place-img_wrap">
+            <a asp-area="" asp-controller="Places" asp-action="Index" asp-route-page = "1" asp-route-placeType="@Model[0].Id" >
+                <div class="grid">
+                    <figure class="effect-ruby">
+                        <img src="~/images/find-place1.jpg" class="img-fluid" alt="img13" />
+                        <figcaption>
+                           
+                            <h5>@Localizer[@Model[0].Name]</h5>
+
+                        </figcaption>
+                    </figure>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="row find-img-align">
+            <div class="col-md-12">
+                <div class="find-place-img_wrap">
+                    <a asp-area="" asp-controller="Places" asp-action="Index" asp-route-page = "1"  asp-route-placeType="@Model[1].Id" >
+
+                        <div class="grid">
+                            <figure class="effect-ruby">
+                                <img src="~/images/find-place2.jpg" class="img-fluid" alt="img13" />
+                                <figcaption>
+                                    <h5>@Localizer[@Model[1].Name]</h5>
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="find-place-img_wrap">
+                    <a asp-area="" asp-controller="Places" asp-action="Index" asp-route-page = "1"  asp-route-placeType="@Model[2].Id"  >
+                        <div class="grid">
+                            <figure class="effect-ruby">
+                                <img src="~/images/Pizza.jpg" class="img-fluid" alt="img13" />
+                                <figcaption>
+                                    <h5>@Localizer[@Model[2].Name]</h5>
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="row find-img-align">
+            <div class="col-md-12">
+                <div class="find-place-img_wrap">
+                    <a asp-area="" asp-controller="Places" asp-action="Index" asp-route-page = "1"  asp-route-placeType="@Model[3].Id">
+                        <div class="grid">
+                            <figure class="effect-ruby">
+                                <img src="~/images/meniu.jpg" class="img-fluid" alt="img13" />
+                                <figcaption>
+                                    <h5>@Localizer[@Model[3].Name]</h5>
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="find-place-img_wrap">
+                    <a asp-area="" asp-controller="Places" asp-action="Index" asp-route-page = "1" asp-route-placeType="@Model[4].Id">
+                        <div class="grid">
+                            <figure class="effect-ruby">
+                                <img src="~/images/find-place5.jpg" class="img-fluid" alt="img13" />
+                                <figcaption>
+                                    <h5>@Localizer[@Model[4].Name]</h5>
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

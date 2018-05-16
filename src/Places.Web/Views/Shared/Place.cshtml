@@ -1,0 +1,52 @@
+﻿@using Places.Web.Models.ViewModels
+@inject IViewLocalizer Localizer
+@model PlaceViewModel
+
+
+<div class="col-md-4 featured-responsive">
+    <div class="featured-place-wrap">
+        <a asp-controller="Places" asp-action="Details" asp-route-id="@Model.Id">
+            <img src="@Model.Image" />
+            <span class="featured-rating-orange">@Model.AvgRating </span>
+            <div class="featured-title-box">
+                <h6>@Model.Name</h6>
+
+
+                <ul>
+                    <li>
+                        <p>  <span>• </span> @Localizer[@Model.Type.Name] </p>
+
+                        <p>    <span> • </span>@Model.NumberOfReviews Reviews</p>
+                    </li>
+                    <li>
+                        <p>
+                            <span> • </span>   @Html.Partial("Address.cshtml", @Model.Address)
+                        </p>
+                    </li>
+                    <li>
+
+                        <p>   <span> • </span>@Model.Telephone</p>
+                    </li>
+                    <li>
+
+                        <p>
+                            <span> • </span> @Model.Email
+                        </p>
+                    </li>
+                    <li>
+                        <hr class="style17" />
+                        <p>
+                            <span> • </span> @Model.Website
+                        </p>
+                    </li>
+
+                </ul>
+
+
+            </div>
+        </a>
+
+    </div>
+</div>
+
+

@@ -1,0 +1,46 @@
+﻿@using Places.Web.Models.ViewModels
+@model PlaceDetailsViewModel
+
+<div class="col-md-4 featured-responsive">
+    <div class="featured-place-wrap">
+        <a href="detail.html">
+            <img src="images/featured1.jpg" class="img-fluid" alt="#">
+            <span class="featured-rating-orange">2.3 @*@Model.AvgRating*@ </span>
+            <div class="featured-title-box">
+                <h6>@Model.Name</h6>
+                <p>@Model.Type </p> 
+                <span>• </span>
+                <p>@Model.NumberOfReviews Reviews</p> 
+                <span> • </span>
+
+                <ul>
+                    <li>
+                        <span class="icon-location-pin"></span>
+                        <p>    @Html.Partial("Address.cshtml", @Model.Address)</p>
+                    </li>
+                    <li>
+                        <span class="icon-screen-smartphone"></span>
+                        <p>@Model.Telephone</p>
+                    </li>
+                    <li>
+                        <span class="icon-link"></span>
+                        <p>@Model.Website</p>
+                    </li>
+
+                </ul>
+                <div class="bottom-icons">
+                    <div class="closed-now">CLOSED NOW</div>
+                    <span class="ti-heart"></span>
+                    <span class="ti-bookmark"></span>
+                </div>
+
+            </div>
+        </a>
+        <a asp-controller="WorkSchedules" asp-action="Create" asp-route-id="@Model.Id">Add Work Schedule</a> |
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="Details" asp-route-id="@Model.Id">Details</a> |
+        <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    </div>
+</div>
+
+

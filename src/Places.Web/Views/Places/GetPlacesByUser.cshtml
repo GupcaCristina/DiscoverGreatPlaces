@@ -1,0 +1,21 @@
+﻿
+@using  Places.Web.Models.ViewModels
+@using DomainUtil
+
+@model PaginatedList<PlaceViewModel>
+<style>
+    .all-width {
+        width: 100%;
+    }
+</style>
+<div class="row col-md-12">
+    @Html.Partial("~/Views/Shared/_Search.cshtml")
+</div>
+<hr />
+<div class="row">
+    @foreach (var item in Model)
+    {
+        @Html.Partial("~/Views/Shared/Place.cshtml", @item)
+    }
+</div>
+@Html.Partial("~/Views/Shared/_Pagination.cshtml", @Model)

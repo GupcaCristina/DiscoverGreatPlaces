@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Places.DAL.Repositories
 {
-    class FacilitieRepository:Repository<Facilitie>
+    class FacilitieRepository:IRepository<Facilitie>
     {
         public FacilitieRepository(DbContext context) : base(context)
         {

@@ -1,0 +1,54 @@
+﻿@model Places.Domain.WorkSchedule
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>WorkSchedule</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.StartWork)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StartWork)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EndWork)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EndWork)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.HasLunchBreak)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HasLunchBreak)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StartBreak)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StartBreak)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EndBreak)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EndBreak)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Day)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Day)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

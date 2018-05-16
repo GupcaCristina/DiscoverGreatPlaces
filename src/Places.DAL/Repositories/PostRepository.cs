@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Places.DAL.Repositories
 { 
-    public class PostRepository :Repository<Post>
+    public class PostRepository :IRepository<Post>
     {
         public PostRepository(DbContext context) : base(context)
         {

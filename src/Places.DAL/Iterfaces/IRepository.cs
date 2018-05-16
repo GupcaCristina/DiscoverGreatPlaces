@@ -12,6 +12,7 @@ namespace Places.DAL.Interfaces
             void AddRange(IList<TEntity> values);
             void Delete(int id);
             void Delete(TEntity entity);
+            void Update(TEntity entity);
             void SaveChanges();
             
         }

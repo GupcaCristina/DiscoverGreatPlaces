@@ -1,0 +1,10 @@
+﻿@using DomainUtil
+@using  Places.Web.Models.ViewModels
+@inject IViewLocalizer Localizer
+@model DomainUtil.PaginatedList<PlaceViewModel>
+
+<div class="row  d-flex justify-content-center">
+    
+    @Html.ActionLink(@Localizer["Prev"].Value, "Index", new { page = (Model.PageIndex - 1) }, new { @class = "btn btn-danger col-md-2 " })
+    @Html.ActionLink(@Localizer["Next"].Value, "Index", new { page = (Model.PageIndex + 1) }, new { @class = "btn btn-danger col-md-2 marginstyle" })
+</div>

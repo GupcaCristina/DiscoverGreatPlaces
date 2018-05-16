@@ -1,0 +1,27 @@
+﻿@model Places.Web.Models.ViewModels.SendMessageViewModel
+
+
+@using (Html.BeginForm())
+{
+
+
+    @Html.HiddenFor(model => model.PlaceId, new { Value = @ViewBag.placeId });
+    <div>To:</div>
+    <input  asp-for="To" value="@ViewBag.placeEmail " />
+  
+    <div>From:</div>
+    @Html.TextBoxFor(model => model.From);
+    <div>   Subject::</div>
+
+
+    @Html.TextBoxFor(model => model.Subject);
+    <div>   Body::</div>
+
+    @Html.TextBoxFor(model => model.Body);
+
+    <input type="submit" value="Send Message">
+
+
+}
+
+

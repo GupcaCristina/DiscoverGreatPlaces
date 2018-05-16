@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using Places.DAL.Interfaces;
+using System;
 
 
 namespace Places.DAL.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class IRepository<TEntity> : Interfaces.IRepository<TEntity> where TEntity : class
     {
         protected DbContext _context;
         protected DbSet<TEntity> _dbset;
 
-        public Repository(DbContext context)
+        public IRepository(DbContext context)
         {
             _context = context;
             _dbset = _context.Set<TEntity>();
@@ -26,8 +27,14 @@ namespace Places.DAL.Repositories
         {
             _dbset.Remove(entity);
         }
+        public void Update(TEntity entity)
+        {
+            _dbset.Attach(entity);
+            var entry = _context.Entry(entity);
+            entry.State = EntityState.Modified;
 
-        public virtual  IQueryable<TEntity> Get() 
+        }
+        public  IQueryable<TEntity> Get() 
         {
             return _dbset;
         }

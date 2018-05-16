@@ -1,0 +1,117 @@
+﻿@using Places.Web.Models.ViewModels
+@model PlaceDetailsViewModel
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="carousel-inner">
+    <div class="item active">
+        <div class="imgcontainer">
+            <img src="@ViewBag.imagesrc" class="img-responsive imgcontainer" /><br />
+        </div>
+    </div>
+</div>
+<br />
+<section class="reserve-block">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 ">
+                <h3>
+                    @Model.Name
+
+                    @Html.Partial("~/Views/Shared/_EditPlace.cshtml", @Model)
+                </h3>
+                <h5>
+                    <img src="~/images/incons/wedding-dinner.png" /><span class="marginstyle">@Localizer[@Model.Type.Name]</span>
+                </h5>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="light-bg booking-details_wrap">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 responsive-wrap">
+                <div class="booking-checkbox_wrap">
+                    <div class="booking-checkbox">
+                        <p>
+                            @Model.Descriprion
+                        </p>
+                        <hr class="style17">
+                    </div>
+                    <p>
+                        @Localizer["Facilities"]
+                    </p>
+                @Html.Partial("~/Views/Facilities/Details.cshtml",@Model.Facilities)
+                </div>
+                <hr class="style17">
+                <div class="booking-checkbox_wrap mt-4">
+                    <h5>@Model.NumberOfReviews @Localizer["Reviews"] </h5>
+                    <span class="featured-rating-orange">@Model.RatingAVG </span>
+                    <hr class="style17">
+                    <div class="addreview">
+                        <p>
+                            @Html.Partial("~/Views/Reviews/_CreateReview.cshtml", new ReviewViewModel() { PlaceId = @Model.Id })
+                        </p>
+                    </div>
+                    <hr>
+                    @foreach (var item in Model.Reviews)
+                    {
+                        @Html.Partial("~/Views/Reviews/_ReviewDetails.cshtml", item)
+                    }
+
+                </div>
+            </div>
+            <div class="col-md-4 responsive-wrap">
+                <div class="contact-info container">
+
+                    <br />
+
+                    <iframe src="https://www.google.com/maps/embed/v1/place?q=@Model.Address.Country+,+@Model.Address.City+,+str.+@Model.Address.Street+@Model.Address.City
+                      &zoom=13
+                      &attribution_source=Google+Maps+Embed+API
+                      &attribution_web_url=https://developers.google.com/maps/documentation/embed/
+                      &key=AIzaSyAUzc-yL38TQlRR_lWU0ARCYtROvx15UU4" allowfullscreen style="border-radius:5px"></iframe>
+                    <div class="address">
+                        @Localizer["Address"]
+                        <span class="icon-location-pin"></span>
+                        <p>
+                            @Html.Partial("~/Views/Shared/Address.cshtml", @Model.Address)
+                        </p>
+                    </div>
+                    <div class="address">
+                        <span class="icon-screen-smartphone"></span>
+                        <p> @Model.Telephone</p>
+                    </div>
+                    <div class="address">
+                        <span class="icon-link"></span>
+                        <p> <a href="@Model.Website">@Model.Website</a></p>
+                    </div>
+                    <div class="address">
+                        <span class="icon-link"></span>
+                        <p> <a href="@Model.Email">@Model.Email"</a></p>
+                    </div>
+                    <div class="address">
+                        <span class="icon-clock"></span>
+                        <p>
+                            @foreach (var item in @Model.WorkSchedules)
+                            {
+                                @item.Day
+                                @item.StartWork
+                                @item.EndWork
+                                <br>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+

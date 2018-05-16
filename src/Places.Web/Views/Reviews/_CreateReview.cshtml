@@ -1,0 +1,50 @@
+﻿
+@model Places.Web.Models.ViewModels.ReviewViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IViewLocalizer Localizer
+
+
+<div class="row">
+    <div class="col-md-12">
+   
+        <form asp-action="Create" asp-controller="Reviews" method="POST" data-ajax="true" data-ajax-update="addreview">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input name="PlaceId" type="hidden" value="@Model.PlaceId" />
+
+                <input name="UserId" type="hidden" value="@UserManager.GetUserAsync(User).Result.Id" />
+                @Localizer["Description"]
+
+
+                <textarea asp-for="Description" class="form-control" title="Add a description" style="display:inline"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+                <br />
+                @Localizer["Rating"]
+              
+                <select name="Rating" id="number" class="form-control" style="display:inline">
+                    @for (int i = 1; i < 10; i++)
+        {
+            <option>@i</option>
+}
+                    <option selected="selected">10</option>
+                </select>
+                <span asp-validation-for="Rating" class="text-danger"></span>
+                <div>
+                    <input type="submit" value="  @Localizer["AddReview"]" class="inputbtn btn btn-danger" />
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+
+}

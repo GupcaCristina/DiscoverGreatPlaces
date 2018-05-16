@@ -1,0 +1,148 @@
+﻿@model Places.Web.Models.ViewModels.CreatePlaceViewModel
+@inject IViewLocalizer Localizer
+<h2> @Localizer["header"]</h2>
+
+<h4></h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UserId" value="@ViewBag.UserId" />
+            <div class="row">
+
+                <div class="form-group col-md-7">
+                    <label class="control-label"> @Localizer["Name"] </label>
+                    <input asp-for="Name" class="form-control inline" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-5">
+                    <label class="control-label">@Localizer["Type"] </label>
+                    @Html.DropDownListFor(m => m.Type, new SelectList(ViewBag.Types, "Id", "Name"), new { @class = "country form-control inline" })
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">@Localizer["Descriprion"]</label>
+                <textarea asp-for="Descriprion" class="form-control col-md-12 inputtextarea"></textarea>
+                <span asp-validation-for="Descriprion" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <h4>@Localizer["Address"]</h4>
+                    <hr class="style17" />
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="control-label"> @Localizer["CountryId"] </label>
+                            @Html.DropDownListFor(m => m.CountryId, new SelectList(ViewBag.Countries, "Id", "Name"), new { @class = "country form-control" })
+                            <span asp-validation-for="CountryId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label"> @Localizer["CityId"] </label>
+                            @Html.DropDownListFor(x => x.CityId, new SelectList(string.Empty, "Id", "Name"), new { @class = "form-control" })
+                            <span asp-validation-for="CityId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-8">
+                            <label class="control-label">@Localizer["Street"] </label>
+                            @Html.DropDownListFor(x => x.Street, new SelectList(string.Empty, "Id", "Name"), new { @class = "form-control" })
+                            <span asp-validation-for="Street" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label class="control-label">@Localizer["StreetNumber"] </label>
+                            <input asp-for="StreetNumber" class="form-control" />
+                            <span asp-validation-for="StreetNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">@Localizer["PostalCode"] </label>
+                        <input asp-for="PostalCode" class="form-control" />
+                        <span asp-validation-for="PostalCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4>@Localizer["ContactInfo"]  </h4>
+                    <hr class="style17" />
+                    <div class="form-group">
+                        <label class="control-label">@Localizer["Email"] </label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">@Localizer["Telephone"] </label>
+                        <input asp-for="Telephone" class="form-control" />
+                        <span asp-validation-for="Telephone" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"> @Localizer["Website"] </label>
+                        <input asp-for="Website" class="form-control" />
+                        <span asp-validation-for="Website" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <hr class="style17" />
+            <div class="row">
+
+                <div class="form-group col-md-6">
+                    <label class="control-label"> @Localizer["Image"] </label>
+                    <input type="file" name="img" class="form-control" />
+                    <span asp-validation-for="Image" id="imgInp"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="control-label">@Localizer["AdditionalInfo"] </label>
+                    <input asp-for="AdditionalInfo" class="form-control" />
+                    <span asp-validation-for="AdditionalInfo" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>
+                        @Localizer["Facilities"]</h4>
+
+     @Html.DropDownList("Add Facilities", new SelectList(ViewBag.Facilities, "Id", "Name"), new { @class = " form-control", @id = "facilitie" })
+
+</div>
+
+                <div id="facilitiediv" class="col-md-6">
+                    <h4></h4>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#facilitie").change(function () {
+            var data = $(this).children("option").filter(":selected").text()
+            var result = " <input type='checkbox'  name='Facilities' checked > " + data + " </input> ";
+            $("#facilitiediv").append(result);
+        })
+    });
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/AddressAjaxRequests.js"></script>
+
+
+
+
+}

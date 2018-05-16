@@ -11,4 +11,14 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.2.2" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Places.DAL\Places.DAL.csproj" />
+    <ProjectReference Include="..\Places.DTO\Places.DTO.csproj" />
+  </ItemGroup>
+
 </Project>

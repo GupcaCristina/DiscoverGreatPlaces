@@ -14,7 +14,7 @@ namespace Places.DTO
         public string StreetNumber { get; set; }
         public string AdditionalInfo { get; set; }
 
-        public int StreetID { get; set; }
+        public StreetDTO Street { get; set; }
 
     }
 }

@@ -5,13 +5,13 @@ using System.Text;
 
 namespace Places.DTO
 {
-    public class StreetDTOS
+    public class StreetDTO
     {
 
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public int CityID { get; set; }
+        public CityDTO City { get; set; }
 
     }
 }

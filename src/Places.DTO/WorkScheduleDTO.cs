@@ -13,7 +13,7 @@ namespace Places.DTO
         public bool HasLunchBreak { get; set; }
         public string StartBreak { get; set; }
         public string EndBreak { get; set; }
-
+        public int PlaceId { get; set; }
         public DayOfWeek Day { get; set; }
     }
 }
