@@ -15,6 +15,7 @@ using System.Security.Claims;
 using Places.Web.Models;
 using Places.Web.Models.Profiles;
 using PlacesProfile = Places.BLL.Profiles.PlacesProfile;
+using Places.Test.Web.Test.Controllers;
 
 namespace Web.Controllers.Test
 {
@@ -57,7 +58,7 @@ namespace Web.Controllers.Test
             _addressService = new Mock<IAddressServices>();
             _imageServices = new Mock<IImageServices>();
             _facilitiesServices = new Mock<IFacilitiesServices>();
-            _userManager = GetMockUserManager();
+            _userManager = UserManagerProvider.GetMockUserManager();
             _mapper = _config.CreateMapper();
             // _signInManager = MockSignInManager<ApplicationUser>();         
             _placesController = new PlacesController(
@@ -488,13 +489,6 @@ namespace Web.Controllers.Test
             Assert.Null(viewResult.ControllerName);
         }
 
-     
 
-        private Mock<UserManager<ApplicationUser>> GetMockUserManager()
-        {
-            var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
-            return new Mock<UserManager<ApplicationUser>>(
-                userStoreMock.Object, null, null, null, null, null, null, null, null);
-        }
     }
 }

@@ -12,11 +12,12 @@ namespace Places.Web.Controllers
     {
 
         private readonly IReviewsServices _reviewsServices;
-
-        public ReviewsController(IReviewsServices reviewsServices)
+        public IMapper Mapper { get; set; }
+        public ReviewsController(IReviewsServices reviewsServices, IMapper mapper)
 
         {
             _reviewsServices = reviewsServices;
+            Mapper = mapper;
         }
 
         [AuthorizeAttribute]

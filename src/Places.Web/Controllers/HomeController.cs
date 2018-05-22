@@ -20,24 +20,33 @@ namespace Places.Web.Controllers
         private IPlaceServices _placesService;
         private UserManager<ApplicationUser> _userManager;
         private IImageServices _imageServices;
+        public IMapper Mapper { get; set; }
 
-        public HomeController(UserManager<ApplicationUser> userManager, IPlaceServices placeServices,
-            IImageServices imageServices 
+
+        public HomeController(UserManager<ApplicationUser> userManager,
+            IPlaceServices placeServices,
+            IImageServices imageServices ,
+            IMapper mapper
            )
         {
             _userManager = userManager;
             _placesService = placeServices;
             _imageServices = imageServices;
+            Mapper = mapper;
         }
 
         public IActionResult Index()
         {
-            var topPlaces = _placesService.GetTopPlaces().ToList();
+            var topPlaces = _placesService.GetTopPlaces(3).ToList();
             var placeTypes = _placesService.GetTypes();
             var places= Mapper.Map<List<PlaceViewModel>>(topPlaces);
             for (int i = 0; i < topPlaces.Count; i++)
             {
+                if (topPlaces[i].Images.Count!=0)
+                {
                 places[i].Image =  _imageServices.ConvertImage(topPlaces[i].Images[0].PlaceImage);
+
+                }
             }
             ViewData["TopPlaces"] = places;
             ViewData["PlaceTypes"] = Mapper.Map<List<LookupViewModel>>(placeTypes);
@@ -58,16 +67,11 @@ namespace Places.Web.Controllers
             return LocalRedirect(returnUrl);
         }
 
-        public IActionResult ProfileInfo()
-        {
-            ViewData["Message"] = "Your contact page.";
 
-            return View();
-        }
 
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel( ));
         }
     }
 }
