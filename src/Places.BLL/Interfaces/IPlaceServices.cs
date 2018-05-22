@@ -13,7 +13,7 @@ namespace Places.BLL.Interfaces
         List<PlaceDTO> GetTopPlaces(int topNumber = 3);
         PlaceDetailsDTO GetPlaceDetails(int id);
         PaginatedList<PlaceDTO> GetPaginatedList(int pageSize, int? placeType  , string searchString, int page );
-        PaginatedList<PlaceDTO> GetPlacesByUser(int pageSize, string userId, string searchString, int page = 0);
+        List<PlaceDTO> GetPlacesByUser(string userId);
         List<PlaceTypeDTO> GetTypes();
         void SavePlace(CreatePlaceDTO place);
         CreatePlaceDTO GetById(int id);

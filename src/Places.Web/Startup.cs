@@ -39,14 +39,6 @@ namespace Places.Web
             services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
-            //------------------------------------------
-
-            services.AddDbContext<PlacesContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<PlacesContext>()
-                .AddDefaultTokenProviders();
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -60,6 +52,16 @@ namespace Places.Web
                 options.SupportedUICultures = supportedCultures;
             });
 
+            //------------------------------------------
+
+            services.AddDbContext<PlacesContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<PlacesContext>()
+                .AddDefaultTokenProviders();
+
+           
             //---------External Authentication----------------
             services.AddAuthentication().AddFacebook(facebookOptions =>
             {

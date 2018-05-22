@@ -22,7 +22,7 @@ namespace Places.DTO
         //Address
         public AddressDTO Address { get; set; }
         public List<Image> Images { get; set; } = new List<Image>();
-        public Guid? ImageID { get; set; }
+        public Guid? ImageId { get; set; }
        
         public int? NumberOfReviews { get; set; }
     

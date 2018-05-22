@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DomainUtil;
@@ -9,12 +10,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NLog;
 using Places.BLL.Interfaces;
 
 using Places.Domain;
 using Places.DTO;
 using Places.Web.Models;
 using Places.Web.Models.ViewModels;
+using LogLevel = NLog.LogLevel;
 
 namespace Places.Web.Controllers
 {
@@ -24,20 +27,23 @@ namespace Places.Web.Controllers
         private IAddressServices _addressService;
         private IImageServices _imageServices;
         private IFacilitiesServices _facilitiesServices;
-        private readonly ILogger _logger;
+        private Logger _logger;
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
+        public IMapper Mapper  { get; set; }
       
 
 
 
-        public PlacesController(UserManager<ApplicationUser> userManager,
+        public PlacesController(
                             IPlaceServices placeServices,
                             IAddressServices addressService,
                             IFacilitiesServices facilitiesServices,
-                            IImageServices imageServices,
-                            SignInManager<ApplicationUser> signInManager,
-                            ILogger<PlacesController> logger  )
+                            IImageServices imageServices,  
+                            IMapper mapper,
+                        
+            UserManager<ApplicationUser> userManager = null,
+            SignInManager<ApplicationUser> signInManager = null)
         {
             _placesService = placeServices;
             _addressService = addressService;
@@ -45,62 +51,57 @@ namespace Places.Web.Controllers
             _userManager = userManager;
             _imageServices = imageServices;
             _signInManager = signInManager;
-            _logger = logger;
-          
-
+            _logger = LogManager.GetCurrentClassLogger();
+            Mapper = mapper;
         }
 
         public ActionResult Index(int page, int? placeType, string searchString)
-        {
-       
-            _logger.LogInformation("Getting all place");
+        {      
+           
             var pageSize = 6;
             var places = _placesService.GetPaginatedList(pageSize, placeType,  searchString, page);
-
+          
             var allPlaces = Mapper.Map<PaginatedList<PlaceViewModel>>(places);
+           
             allPlaces.PageIndex = places.PageIndex;
             allPlaces.TotalPages = places.TotalPages;
 
             for (int i = 0; i < places.Count; i++)
             {
-                allPlaces[i].Image = _imageServices.ConvertImage(places[i].Images[0].PlaceImage);                           
+                if (places[i].Images.Count != 0)
+                    allPlaces[i].Image = _imageServices.ConvertImage(places[i].Images[0].PlaceImage);
+
             }
             return View(allPlaces);
         }
       
         public IActionResult Details(int id)
         {
+            if (id <= 0)
+            {
+                _logger.Log(LogLevel.Error, $"Place with id={id} doesn`t exist");
+                return View("Error", new ErrorViewModel() { ErrorMessage = "The place that you are looking for doesn`t exist." });
+            }
+
             PlaceDetailsDTO place;
             try
             {
-                var userId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
-                ViewBag.UserId = userId;
+                 place = _placesService.GetPlaceDetails(id);
             }
-            catch 
+            catch (NullReferenceException ex)
             {
-                _logger.LogWarning("User is not signed-in");
-                return View("Error",new ErrorViewModel(){ErrorMessage = "You are not signed-in" });
-            }           
-            try
-            {
-              place = _placesService.GetPlaceDetails(id);
+                _logger.Log(LogLevel.Warn, $"Place with id={id} was not found !");
+                return View("Error", new ErrorViewModel() { ErrorMessage = $"Place with id={id} was not found!!!" });
             }
-            catch (NullReferenceException  ex)
-            {
-                _logger.LogError($"Place with id={id} was not found");
-                return View("Error", new ErrorViewModel() { ErrorMessage = $"Place with id={id} was not found" });
-            }        
             var placeDetails = Mapper.Map<PlaceDetailsViewModel>(place);
-
-            if (placeDetails == null)
+            if (placeDetails!=null && placeDetails.Images.Count != 0 )
             {
-               
-                return NotFound();
+                byte[] imagebyte = placeDetails.Images[0].PlaceImage;
+                ViewBag.imagesrc = _imageServices.ConvertImage(imagebyte);
             }
-            byte[] imagebyte = placeDetails.Images[0].PlaceImage;
-            var base64 = Convert.ToBase64String(imagebyte);
-            ViewBag.imagesrc = string.Format("data:image/png;base64,{0}", base64);
             return View(placeDetails);
+
+           
         }
 
         [AuthorizeAttribute]
@@ -108,7 +109,7 @@ namespace Places.Web.Controllers
         {
             var countries = _addressService.GetCountries();
             var placeTypes =  _placesService.GetTypes();
-            var user = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+            var user = _userManager.GetUserId(User);
             var facilities = _facilitiesServices.GetFacilities();
 
             ViewBag.UserId = user;
@@ -127,94 +128,95 @@ namespace Places.Web.Controllers
             var newPlace = Mapper.Map<CreatePlaceDTO>(place);
             if (img != null)
             {
-                place.Image = new List<ImageViewModel>();
-                for (int i = 0; i < img.Count; i++)
-                {
-                    var newImage = new ImageViewModel();
-                    newImage.PlaceImage = _imageServices.GetByteArrayFromImage(img[i]);
-                    newImage.Name = System.IO.Path.GetFileName(img[i].FileName);
-                    newImage.ContentType = img[i].ContentType;
-                   place.Image.Add(newImage);
-                }
-
-                newPlace.Images = Mapper.Map<List<ImageDTO>>(place.Image);
-            }
-          
+                newPlace.Images = _imageServices.GetImages(img);
+            }         
             if (ModelState.IsValid)
             {               
                 _placesService.SavePlace(newPlace);
                 return RedirectToAction(nameof(GetPlacesByUser), new { page = 1 });
             }
-            _logger.LogWarning("Model passed by user is not valid");
+            _logger.Log(LogLevel.Warn, "Model passed by user is not valid");
+            return View("Error", new ErrorViewModel() { ErrorMessage = $"The information in the fields is not valid . Please try again" });
 
-            return View("Index",new { page = 1});
         }
 
         [AuthorizeAttribute]
         public IActionResult Edit(int id)
         {
-            var place = _placesService.GetById(id);
+            CreatePlaceDTO place; 
+            try
+            {
+                place= _placesService.GetById(id);
+
+            }
+            catch (NullReferenceException e)
+            {
+                _logger.Log(LogLevel.Error, $"Place with id={id} doesn`t exist");
+                return View("Error", new ErrorViewModel() { ErrorMessage = "The place that you are looking for doesn`t exist." });
+            }
+       
+         
             var placeModel = Mapper.Map<CreatePlaceViewModel>(place);
             if (place == null)
             {
-                _logger.LogError("Place requested for edit was not found");
-                return NotFound();
+                _logger.Log(LogLevel.Error, $"Place with id={id} requested for edit was not found");
+                return View("Error", new ErrorViewModel() { ErrorMessage = "The place that you are looking for was not found ." });
             }
-            
-            var countries = _addressService.GetCountries();
-            var cities = _addressService.GetCities(placeModel.CountryId);
-            var streets = _addressService.GetStreets(placeModel.CountryId, placeModel.CityId);
-            var placeTypes = _placesService.GetTypes();
-            var userId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
 
-            ViewBag.UserId = userId;
-            ViewBag.Countries = countries;
-            ViewBag.Cities = cities;
-            ViewBag.Streets = streets;
-            ViewBag.Types = placeTypes;
+            ViewBag.UserId = _userManager.GetUserId(User);
+            ViewBag.Countries = _addressService.GetCountries();
+            ViewBag.Cities = _addressService.GetCities(placeModel.CountryId);
+            ViewBag.Streets = _addressService.GetStreets(placeModel.CountryId, placeModel.CityId);
+            ViewBag.Types = _placesService.GetTypes();
             return View(placeModel);
         }
 
         [AuthorizeAttribute]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, CreatePlaceViewModel placeViewModel)
+        public IActionResult Edit(int id, CreatePlaceViewModel placeViewModel, List<IFormFile> img)
         {
             if (id != placeViewModel.Id)
             {
-                _logger.LogError("Place requested for update was not found");
-                return NotFound();
+                _logger.Log(LogLevel.Error, "Place requested for update was not found");
+                return View("Error", new ErrorViewModel() { ErrorMessage = $"The place that you whant to edit for was not found ." });
             }
             if (ModelState.IsValid)
             {
                 try
                 {
                     var placeDTO = Mapper.Map<CreatePlaceDTO>(placeViewModel);
+                    if (img != null)
+                    {
+                        placeDTO.Images = _imageServices.GetImages(img);
+                    }
                     _placesService.UpdatePlace(placeDTO);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    _logger.LogError("Update doesn`t succed");
-                    throw;
+                    _logger.Log(LogLevel.Error,"Update doesn`t succed");
+                    return View("Error", new ErrorViewModel() { ErrorMessage = $"Update doesn`t succed . Please try again" });
                 }
                 return RedirectToAction(nameof(Details), new { id = id });
             }
-            _logger.LogWarning("Requested Model state is not valid ");
-
-            return View(placeViewModel);
+            _logger.Log(LogLevel.Warn, "Requested Model state is not valid ");
+            return View("Error", new ErrorViewModel() { ErrorMessage = $"The information in the fields is not valid . Please try again" });
         }
        
 
         public IActionResult Delete(int id)
         {
-            if (_placesService.GetById(id)  == null)
+            CreatePlaceDTO placeToDelete;
+            try
             {
-                _logger.LogError("Place requested for delete was not found");
-                return NotFound();
+                placeToDelete = _placesService.GetById(id);
             }
-
+            catch (NullReferenceException ex)
+            {
+                _logger.Log(LogLevel.Warn, $"Place with id={id} was not found !");
+                return View("Error", new ErrorViewModel() { ErrorMessage = "The place that you are looking for was not found .." });
+            }
             _placesService.DeletePlace(id);
-
             return RedirectToAction(nameof(Index));
         }
 
@@ -226,17 +228,16 @@ namespace Places.Web.Controllers
             if (_signInManager.IsSignedIn(User))
             {
                 ViewData["UserId"] = userId;
-
             }
            
-            int pageSize = 6;
-            var places = _placesService.GetPlacesByUser (pageSize, userId, searchString, page);
-            var allPlaces = Mapper.Map<PaginatedList<PlaceViewModel>>(places);
-            allPlaces.PageIndex = places.PageIndex;
-            allPlaces.TotalPages = places.TotalPages;
+        
+            var places = _placesService.GetPlacesByUser ( userId);
+            var allPlaces = Mapper.Map<List<PlaceViewModel>>(places);
+          
 
             for (int i = 0; i < places.Count; i++)
             {
+                if (places[i].Images.Count!=0)
                 allPlaces[i].Image = _imageServices.ConvertImage(places[i].Images[0].PlaceImage);
             }
 

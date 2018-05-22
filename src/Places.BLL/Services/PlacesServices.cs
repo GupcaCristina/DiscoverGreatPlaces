@@ -91,26 +91,18 @@ namespace Places.BLL.Services
             return allPlaces;
         }
        
-              public PaginatedList<PlaceDTO> GetPlacesByUser(int pageSize, string userId, string searchString, int page = 0)
+              public List<PlaceDTO> GetPlacesByUser( string userId)
           {
-            var allplaces = _repository.Get().Where(p=>p.IdUser==userId);
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                allplaces = allplaces.Where(s => s.Name.ToLower().Contains(searchString.ToLower()));
-            }
-            var places = allplaces.Where(p => p.IsDeleted == false)
-                .OrderByDescending(p => p.Reviews.Count > 0 ? p.Reviews.Average(t => t.Rating) : 0.0);
-            var placeList = PaginatedList<Place>.Create(places, page > 0 ? page : 1, pageSize);
-            var items = Mapper.Map<List<PlaceDTO>>(placeList);
-            var allPlaces = new PaginatedList<PlaceDTO>(items, items.Count, page, pageSize);
-
-            foreach (var item in allPlaces)
+            var allplaces = _repository.Get().Where(p=>p.IdUser==userId).ToList();
+           
+            var items = Mapper.Map<List<PlaceDTO>>(allplaces);
+            foreach (var item in items)
             {
                 var result = GetReviewSummary(item.Id);
                 item.NumberOfReviews = result.Count;
                 item.AvgRating = result.Avg;
             }
-            return allPlaces;
+            return items;
         }
         public PlaceDetailsDTO GetPlaceDetails(int id)
         {

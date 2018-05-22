@@ -1,10 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Http;
-using Places.Domain;
 using Places.DTO;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Places.BLL.Interfaces
 {
@@ -14,6 +11,7 @@ namespace Places.BLL.Interfaces
         void SaveImage(ImageDTO imageDTO);
         byte[] GetByteArrayFromImage(IFormFile file);
         string ConvertImage(byte[] image);
+        List<ImageDTO> GetImages(List<IFormFile> img);
 
     }
 }

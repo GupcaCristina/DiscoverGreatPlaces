@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Places.BLL.Interfaces;
 using Places.DTO;
@@ -17,6 +19,7 @@ namespace Places.Web.Controllers
             _reviewsServices = reviewsServices;
         }
 
+        [AuthorizeAttribute]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(ReviewViewModel review)

@@ -24,7 +24,7 @@ namespace Places.Web.Models.ViewModels
         [Required]
         public LookupViewModel Type { get; set; }
         public string Image { get; set; }
-        public Guid? ImageID { get; set; }
+        public Guid? ImageId { get; set; }
         [Display(Name="Number of Reviews")]
         public int? NumberOfReviews { get; set; }
         [Display(Name="Rating")]

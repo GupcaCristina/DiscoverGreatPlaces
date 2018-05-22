@@ -50,5 +50,27 @@ namespace Places.BLL.Services
             var base64 = Convert.ToBase64String(image);
             return  string.Format("data:image/png;base64,{0}", base64);
         }
+
+        public List<ImageDTO> GetImages(List<IFormFile> img)
+        {
+           var images = new List<ImageDTO>();
+            for (int i = 0; i < img.Count; i++)
+            {                
+                if (Path.GetExtension(img[i].FileName).ToLower() == ".jpg"
+                    || Path.GetExtension(img[i].FileName).ToLower() == ".png"
+                    || Path.GetExtension(img[i].FileName).ToLower() == ".gif"
+                    || Path.GetExtension(img[i].FileName).ToLower() == ".jpeg")
+                {
+                    var newImage = new ImageDTO();
+                    newImage.PlaceImage = GetByteArrayFromImage(img[i]);
+                    newImage.Name = System.IO.Path.GetFileName(img[i].FileName);
+                    newImage.ContentType = img[i].ContentType;
+                    images.Add(newImage);
+                }
+            }
+
+            return images;
+        }
+
     }
 }
