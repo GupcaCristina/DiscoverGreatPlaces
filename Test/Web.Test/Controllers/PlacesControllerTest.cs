@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Xunit;
 using Places.BLL.Interfaces;
 using Places.Domain;
@@ -17,7 +16,7 @@ using Places.Web.Models;
 using Places.Web.Models.Profiles;
 using PlacesProfile = Places.BLL.Profiles.PlacesProfile;
 
-namespace Web.Test
+namespace Web.Controllers.Test
 {
     public class PlacesControllerTest
     {

@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Places.DTO;
+using Places.Web.Models;
 
 namespace Places.Web.Controllers
 {
@@ -21,29 +23,44 @@ namespace Places.Web.Controllers
             _addressService = addressService;
         }
 
-        public  List<LookupViewModel> GetCountries()
+        public  List<CountryDTO> GetCountries()
         {         
             var countries = _addressService.GetCountries();
-            var allCountries = Mapper.Map<List<LookupViewModel>>(countries);
-            return allCountries;
+            return countries;
 
         }
         [HttpGet]
         public JsonResult GetCities(int id)
         {
-            var cities = _addressService.GetCities(id);
-            var allcities = Mapper.Map<List<LookupViewModel>>(cities);
-            var city = JsonConvert.SerializeObject(allcities);
+            List<CityDTO> cities;
+            try
+            {
+                cities = _addressService.GetCities(id);
+            }
+            catch (NullReferenceException ex)
+            {              
+                return Json("None City was found!!!" );
+            }
+            var city = JsonConvert.SerializeObject(cities);
+
             return Json(city);
         }
 
         [HttpGet]
-        public ActionResult GetStreets(int countryId , int cityId)
+        public JsonResult GetStreets(int countryId , int cityId)
 
         {
-            var streets = _addressService.GetStreets(countryId, cityId);          
-            var allStreets = Mapper.Map<List<LookupViewModel>>(streets);
-            var street = JsonConvert.SerializeObject(allStreets);
+            List<StreetDTO> streets;
+            try
+            {
+                streets = _addressService.GetStreets(countryId, cityId);
+            }
+            catch (NullReferenceException ex)
+            {
+                return Json("None Street was found!!!");
+            }
+              
+            var street = JsonConvert.SerializeObject(streets);
             return Json(street);
         }
 
